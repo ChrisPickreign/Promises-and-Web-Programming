@@ -11,15 +11,19 @@ export function fetchCurrentWeather(longitude, latitude) {
   apiURL.searchParams.append("temperature_unit", "fahrenheit");
   let usable = apiURL.toString();
 
-fetch(usable)
-  .then((response) => response.json())
+return fetch(usable)
   .then(
-    json=> Array.isArray(json.time) && Array.isArray(json.temperature_2m)
-    ? Promise.resolve(json.hourly)
+    response => response.ok
+    ? Promise.resolve(response)
     : Promise.reject(new Error("Information not found."))
   )
-  .catch(error => console.log("Unable to retrieve data: " + error))
-  }
+  .catch(error => console.log("Unable to return: "))
+  .then(response => (response.json()))
+  .then(json => {
+    return {time: json.hourly.time, temperature_2m: json.hourly.temperature_2m }
+  })
+  
+}
  /*.then(Promise.resolve(json.hourly))
  .catch(error => console.log("Unable to retrieve data"));
  */
